@@ -23,6 +23,7 @@ SpacifyAudioProcessorEditor::SpacifyAudioProcessorEditor (SpacifyAudioProcessor&
     farOutMix.setColour(juce::Slider::textBoxTextColourId, juce::Colours::black);
     farOutMix.setTextValueSuffix("% Mix");
     farOutMix.setValue(100);
+    farOutMix.addListener(this);
     addAndMakeVisible(&farOutMix);
 
     liftOffMix.setSliderStyle(juce::Slider::SliderStyle::LinearHorizontal);
@@ -31,6 +32,7 @@ SpacifyAudioProcessorEditor::SpacifyAudioProcessorEditor (SpacifyAudioProcessor&
     liftOffMix.setColour(juce::Slider::textBoxTextColourId, juce::Colours::black);
     liftOffMix.setTextValueSuffix("% Mix");
     liftOffMix.setValue(100);
+    liftOffMix.addListener(this);
     addAndMakeVisible(&liftOffMix);
 
     otherWorldlyMix.setSliderStyle(juce::Slider::SliderStyle::LinearHorizontal);
@@ -39,6 +41,7 @@ SpacifyAudioProcessorEditor::SpacifyAudioProcessorEditor (SpacifyAudioProcessor&
     otherWorldlyMix.setColour(juce::Slider::textBoxTextColourId, juce::Colours::black);
     otherWorldlyMix.setTextValueSuffix("% Mix");
     otherWorldlyMix.setValue(100);
+    otherWorldlyMix.addListener(this);
     addAndMakeVisible(&otherWorldlyMix);
 }
 
@@ -65,4 +68,11 @@ void SpacifyAudioProcessorEditor::resized()
     farOutMix.setBounds(25, 205, 200, 75);
     liftOffMix.setBounds(250, 205, 200, 75);
     otherWorldlyMix.setBounds(475, 205, 200, 75);
+}
+
+void SpacifyAudioProcessorEditor::sliderValueChanged (juce::Slider* slider)
+{
+    audioProcessor.farOutMixLevel = farOutMix.getValue();
+    audioProcessor.liftOffMixLevel = liftOffMix.getValue();
+    audioProcessor.otherWorldlyMixLevel = otherWorldlyMix.getValue();
 }

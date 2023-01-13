@@ -155,6 +155,10 @@ void SpacifyAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
         auto* channelData = buffer.getWritePointer (channel);
 
         // ..do something to the data...
+        for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
+        {
+            
+        }
     }
 }
 

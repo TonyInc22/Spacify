@@ -20,7 +20,7 @@ class SpacifyAudioProcessor  : public juce::AudioProcessor
 {
 public:
 
-    float noteOnVel;
+    double farOutMixLevel, liftOffMixLevel, otherWorldlyMixLevel;
 
     //==============================================================================
     SpacifyAudioProcessor();
