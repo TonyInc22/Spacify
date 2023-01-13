@@ -15,16 +15,16 @@ SpacifyAudioProcessorEditor::SpacifyAudioProcessorEditor (SpacifyAudioProcessor&
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (200, 200);
+    setSize (600, 400);
 
-    midiVolume.setSliderStyle(juce::Slider::LinearBarVertical);
-    midiVolume.setRange(0.0, 127.0, 1.0);
-    midiVolume.setTextBoxStyle(juce::Slider::NoTextBox, false, 90, 0);
-    midiVolume.setPopupDisplayEnabled(true, false, this);
-    midiVolume.setTextValueSuffix(" Volume");
-    midiVolume.setValue(1.0);
+    farOutMix.setSliderStyle(juce::Slider::SliderStyle::LinearHorizontal);
+    farOutMix.setRange(0, 100, 1);
+    farOutMix.setTextBoxStyle(juce::Slider::TextBoxAbove, true, 75, 25);
+    farOutMix.setColour(juce::Slider::textBoxTextColourId, juce::Colours::black);
+    farOutMix.setTextValueSuffix("% Mix");
+    farOutMix.setValue(100);
 
-    addAndMakeVisible(&midiVolume);
+    addAndMakeVisible(&farOutMix);
 }
 
 SpacifyAudioProcessorEditor::~SpacifyAudioProcessorEditor()
@@ -35,16 +35,16 @@ SpacifyAudioProcessorEditor::~SpacifyAudioProcessorEditor()
 void SpacifyAudioProcessorEditor::paint (juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (juce::Colours::white);
+    g.fillAll (juce::Colours::aliceblue);
 
-    g.setColour (juce::Colours::black);
-    g.setFont (15.0f);
-    g.drawFittedText ("Midi Volume", 0, 0, getWidth(), 30, juce::Justification::centred, 1);
+    //g.setColour (juce::Colours::black);
+    //g.setFont (15.0f);
+    //g.drawFittedText ("SPACIFY", 0, 0, getWidth(), 30, juce::Justification::centred, 1);
 }
 
 void SpacifyAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
-    midiVolume.setBounds(40, 30, 20, getHeight() - 60);
+    farOutMix.setBounds(getWidth() / 2 - 200, getHeight() / 2 - 100, 400, 200);
 }

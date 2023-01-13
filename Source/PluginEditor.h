@@ -29,7 +29,12 @@ private:
     // access the processor object that created it.
     SpacifyAudioProcessor& audioProcessor;
 
-    juce::Slider midiVolume;
+    juce::Slider farOutMix;
+    juce::Slider liftOffMix;
+    juce::Slider otherWorldlyMix;
+    juce::TextButton farOutButton {"Far Out"};
+    juce::TextButton liftOffButton { "Lift Off"};
+    juce::TextButton otherWorldyButton { "Other Wordly" };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SpacifyAudioProcessorEditor)
 };
