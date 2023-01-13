@@ -19,6 +19,9 @@ class SpacifyAudioProcessor  : public juce::AudioProcessor
                             #endif
 {
 public:
+
+    float noteOnVel;
+
     //==============================================================================
     SpacifyAudioProcessor();
     ~SpacifyAudioProcessor() override;
