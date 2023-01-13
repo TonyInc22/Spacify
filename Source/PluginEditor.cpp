@@ -50,14 +50,26 @@ SpacifyAudioProcessorEditor::SpacifyAudioProcessorEditor (SpacifyAudioProcessor&
     //==============================================================================
     farOutButton.setButtonText("Far Out");
     farOutButton.setClickingTogglesState(true);
+    farOutButton.onClick = [&]() 
+    {
+        audioProcessor.farOutButtonClicked = !audioProcessor.farOutButtonClicked;
+    };
     addAndMakeVisible(&farOutButton);
 
     liftOffButton.setButtonText("Lift Off");
     liftOffButton.setClickingTogglesState(true);
+    liftOffButton.onClick = [&]()
+    {
+        audioProcessor.liftOffButtonClicked = !audioProcessor.liftOffButtonClicked;
+    };
     addAndMakeVisible(&liftOffButton);
 
     otherWorldlyButton.setButtonText("Other Worldly");
     otherWorldlyButton.setClickingTogglesState(true);
+    otherWorldlyButton.onClick = [&]()
+    {
+        audioProcessor.otherWorldlyButtonClicked = !audioProcessor.otherWorldlyButtonClicked;
+    };
     addAndMakeVisible(&otherWorldlyButton);
     //==============================================================================
 
@@ -104,7 +116,8 @@ void SpacifyAudioProcessorEditor::resized()
 
 void SpacifyAudioProcessorEditor::sliderValueChanged (juce::Slider* slider)
 {
-    audioProcessor.farOutMixLevel = farOutMix.getValue();
-    audioProcessor.liftOffMixLevel = liftOffMix.getValue();
-    audioProcessor.otherWorldlyMixLevel = otherWorldlyMix.getValue();
+    if (slider == &farOutMix) audioProcessor.farOutMixLevel = farOutMix.getValue();
+    else if (slider == &liftOffMix) audioProcessor.liftOffMixLevel = liftOffMix.getValue();
+    else if (slider == &otherWorldlyMix) audioProcessor.otherWorldlyMixLevel = otherWorldlyMix.getValue();
 }
+
