@@ -21,6 +21,7 @@ class SpacifyAudioProcessor  : public juce::AudioProcessor
 public:
 
     double farOutMixLevel, liftOffMixLevel, otherWorldlyMixLevel;
+    bool farOutButtonActive, liftOffButtonActive, otherWorldlyButtonActive;
 
     //==============================================================================
     SpacifyAudioProcessor();

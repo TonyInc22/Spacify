@@ -170,7 +170,7 @@ bool SpacifyAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* SpacifyAudioProcessor::createEditor()
 {
-    return new SpacifyAudioProcessorEditor (*this);
+    return new SpacifyAudioProcessorEditor(*this);
 }
 
 //==============================================================================
