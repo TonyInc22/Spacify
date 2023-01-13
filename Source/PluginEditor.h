@@ -37,7 +37,7 @@ private:
     juce::Slider otherWorldlyMix;
     juce::TextButton farOutButton {"Far Out"};
     juce::TextButton liftOffButton { "Lift Off"};
-    juce::TextButton otherWorldyButton { "Other Wordly" };
+    juce::TextButton otherWorldlyButton { "Other Wordly" };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SpacifyAudioProcessorEditor)
 };

@@ -13,10 +13,11 @@
 SpacifyAudioProcessorEditor::SpacifyAudioProcessorEditor (SpacifyAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
-    // Make sure that before the constructor has finished, you've set the
-    // editor's size to whatever you need it to be.
+    // Size of the GUI
     setSize (700, 300);
 
+    // Set properties of the sliders
+    //==============================================================================
     farOutMix.setSliderStyle(juce::Slider::SliderStyle::LinearHorizontal);
     farOutMix.setRange(0, 100, 1);
     farOutMix.setTextBoxStyle(juce::Slider::TextBoxAbove, true, 75, 25);
@@ -43,6 +44,20 @@ SpacifyAudioProcessorEditor::SpacifyAudioProcessorEditor (SpacifyAudioProcessor&
     otherWorldlyMix.setValue(100);
     otherWorldlyMix.addListener(this);
     addAndMakeVisible(&otherWorldlyMix);
+    //==============================================================================
+
+    // Set properties of the buttons
+    //==============================================================================
+    farOutButton.setButtonText("Far Out");
+    addAndMakeVisible(&farOutButton);
+
+    liftOffButton.setButtonText("Lift Off");
+    addAndMakeVisible(&liftOffButton);
+
+    otherWorldlyButton.setButtonText("Other Worldly");
+    addAndMakeVisible(&otherWorldlyButton);
+    //==============================================================================
+
 }
 
 SpacifyAudioProcessorEditor::~SpacifyAudioProcessorEditor()
@@ -68,6 +83,10 @@ void SpacifyAudioProcessorEditor::resized()
     farOutMix.setBounds(25, 205, 200, 75);
     liftOffMix.setBounds(250, 205, 200, 75);
     otherWorldlyMix.setBounds(475, 205, 200, 75);
+
+    farOutButton.setBounds(50, 30, 150, 150);
+    liftOffButton.setBounds(275, 30, 150, 150);
+    otherWorldlyButton.setBounds(500, 30, 150, 150);
 }
 
 void SpacifyAudioProcessorEditor::sliderValueChanged (juce::Slider* slider)
