@@ -21,7 +21,7 @@ class SpacifyAudioProcessor  : public juce::AudioProcessor
 public:
 
     double farOutMixLevel, liftOffMixLevel, otherWorldlyMixLevel;
-    bool farOutButtonClicked = false, liftOffButtonClicked = false, otherWorldlyButtonClicked = false;
+    bool farOutButtonClicked, liftOffButtonClicked, otherWorldlyButtonClicked;
 
     //==============================================================================
     SpacifyAudioProcessor();
@@ -61,9 +61,6 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
 private:
-
-    juce::Reverb reverb;
-    juce::Reverb::Parameters reverbParam;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SpacifyAudioProcessor)

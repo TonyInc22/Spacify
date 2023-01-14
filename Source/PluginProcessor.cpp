@@ -133,9 +133,6 @@ void SpacifyAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
 {
     juce::ScopedNoDenormals noDenormals;
 
-    //reverb.setParameters(reverbParam)
-
-
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
@@ -158,7 +155,18 @@ void SpacifyAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
     {
         auto* channelData = buffer.getWritePointer (channel);
 
-        // ..do something to the data...
+        for (int sample = 0; sample < buffer.getNumSamples(); sample++)
+        {
+            if (liftOffButtonClicked) {
+                float cleanSample = *channelData;
+
+                *channelData *= 1 * 10;
+
+                *channelData = (((((2.0f / juce::MathConstants<float>::pi) * atan(*channelData)) * .5f) + (cleanSample * (1.0f - .5f))) / 2.f) * .5f;
+            }
+
+            channelData++;
+        }
     }
 }
 
