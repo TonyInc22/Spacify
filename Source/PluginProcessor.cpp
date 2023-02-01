@@ -19,7 +19,7 @@ SpacifyAudioProcessor::SpacifyAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ), apvts(*this, NULL, "Params", createParams())
 #endif
 {
 }
@@ -200,4 +200,17 @@ void SpacifyAudioProcessor::setStateInformation (const void* data, int sizeInByt
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new SpacifyAudioProcessor();
+}
+
+juce::AudioProcessorValueTreeState::ParameterLayout SpacifyAudioProcessor::createParams() 
+{
+    std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
+    params.push_back(std::make_unique<juce::AudioParameterBool>("FAROUTBUTTON", "Far Out Button", false));
+    params.push_back(std::make_unique<juce::AudioParameterBool>("LIFTOFFBUTTON", "Lift Off Button", false));
+    params.push_back(std::make_unique<juce::AudioParameterBool>("OTHERWORLDLYBUTTON", "Other Worldly Button", false));
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("FAROUTMIX", "Far Out Mix", 0.0f,  100.0f, 100.0f));
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("LIFTOFFMIX", "Lift Off Mix", 0.0f, 100.0f, 100.0f));
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("OTHERWORLDLYMIX", "Other Worldly Mix", 0.0f, 100.0f, 100.0f));
+
+    return { params.begin(), params.end()};
 }
