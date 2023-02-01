@@ -155,6 +155,26 @@ float SpacifyAudioProcessor::getOtherWorldlyMix()
     return apvts.getRawParameterValue("OTHERWORLDLYMIX")->load();
 }
 
+float SpacifyAudioProcessor::reverb(float audio)
+{
+    return audio;
+}
+
+float SpacifyAudioProcessor::chorus(float audio)
+{
+    return audio;
+}
+
+float SpacifyAudioProcessor::distortion(float audio)
+{
+    return audio;
+}
+
+float SpacifyAudioProcessor::flanger(float audio)
+{
+    return audio;
+}
+
 void SpacifyAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
@@ -188,7 +208,8 @@ void SpacifyAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
             {
                 float clean = *channelData;
                 
-
+                *channelData = reverb(*channelData);
+                *channelData = chorus(*channelData);
 
                 float mix = getFarOutMix();
                 *channelData = (1 - mix) * clean + mix * *channelData;
@@ -198,7 +219,9 @@ void SpacifyAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
             {
                 float clean = *channelData;
 
-
+                *channelData = distortion(*channelData);
+                *channelData = reverb(*channelData);
+                *channelData = chorus(*channelData);
 
                 float mix = getLiftOffMix();
                 *channelData = (1 - mix) * clean + mix * *channelData;
@@ -208,7 +231,10 @@ void SpacifyAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
             {
                 float clean = *channelData;
 
-
+                *channelData = distortion(*channelData);
+                *channelData = reverb(*channelData);
+                *channelData = chorus(*channelData);
+                *channelData = flanger(*channelData);
 
                 float mix = getOtherWorldlyMix();
                 *channelData = (1 - mix) * clean + mix * *channelData;

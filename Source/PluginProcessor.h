@@ -60,12 +60,20 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    //==============================================================================
     bool getFarOutButton();
     bool getLiftOffButton();
     bool getOtherWorldlyButton();
+
     float getFarOutMix();
     float getLiftOffMix();
     float getOtherWorldlyMix();
+
+    //==============================================================================
+    float reverb(float audio);
+    float chorus(float audio);
+    float distortion(float audio);
+    float flanger(float audio);
 
     juce::AudioProcessorValueTreeState apvts;
 
