@@ -93,8 +93,7 @@ void SpacifyAudioProcessor::changeProgramName (int index, const juce::String& ne
 //==============================================================================
 void SpacifyAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
+    sampleRate = getSampleRate();
 }
 
 void SpacifyAudioProcessor::releaseResources()
@@ -155,24 +154,77 @@ float SpacifyAudioProcessor::getOtherWorldlyMix()
     return apvts.getRawParameterValue("OTHERWORLDLYMIX")->load();
 }
 
-void SpacifyAudioProcessor::reverb(float* audioL, float* audioR)
+void SpacifyAudioProcessor::reverb(float* audioL, float* audioR, int hcFreq, float diff, float decay, float hfDamp, float* uTankPrev, float* lTankPrev)
 {
-    
+    // Stereo to mono
+    //==============================================================================
+    float audio = 0.5f * (*audioL + *audioR);
+
+    // Preconditioning
+    //==============================================================================
+    float a = exp(-2 * juce::MathConstants<float>::pi * hcFreq / sampleRate);
+    audio = (1 - a) / (1 - a * pow(audio, -1));
+
+    // Decorrelation
+    //==============================================================================
+    int AP[4] = {-142, -107, -379, -277};
+    for (int i = 0; i < 4; i++)
+    {
+        audio = (diff + pow(audio, AP[i])) / (1 + diff * pow(audio, AP[i]));
+    }
+
+    // Tank
+    //==============================================================================
+    float uTank = audio, lTank = audio;
+    *audioL = 0;
+    *audioR = 0;
+
+    uTank += *lTankPrev;
+    uTank = (-diff + pow(uTank, -(8 / 29761) * sampleRate)) / (1 - diff * pow(uTank, -(8 / 29761) * sampleRate));
+    *audioL += pow(uTank, -353) + pow(uTank, -3627);
+    *audioR -= pow(uTank, -1990);
+    uTank = pow(uTank, -4453);
+    uTank = (1 - hfDamp) / (1 - hfDamp * pow(uTank, -1));
+    uTank *= decay;
+    *audioL -= pow(uTank, -1228);
+    *audioR -= pow(uTank, -187);
+    uTank = (-diff + pow(uTank, -1800)) / (1 - diff * pow(uTank, -1800));
+    *audioL += pow(uTank, -2673);
+    *audioR -= pow(uTank, -1066);
+    *uTankPrev = pow(uTank, -3720);
+
+    lTank += *uTankPrev;
+    lTank = (-diff + pow(lTank, -(8 / 29761) * sampleRate)) / (1 - diff * pow(lTank, -(8 / 29761) * sampleRate));
+    *audioL -= pow(lTank, -2111);
+    *audioR += pow(lTank, -2974) + pow(lTank, -266);
+    lTank = pow(lTank, -4217);
+    lTank = (1 - hfDamp) / (1 - hfDamp * pow(lTank, -1));
+    lTank *= decay;
+    *audioL -= pow(lTank, -335);
+    *audioR -= pow(lTank, -1913);
+    lTank = (-diff + pow(lTank, -2656)) / (1 - diff * pow(lTank, -2656));
+    *audioL -= pow(lTank, -121);
+    *audioR += pow(lTank, -1996);
+    *lTankPrev = pow(lTank, -3163);
+
+    *audioL *= 0.6;
+    *audioR *= 0.6;
 }
 
 void SpacifyAudioProcessor::chorus(float* audioL, float* audioR)
 {
-    
+    *audioL *= 3;
+    *audioR *= 3;
 }
 
 void SpacifyAudioProcessor::distortion(float* audioL, float* audioR)
 {
-    
+
 }
 
 void SpacifyAudioProcessor::flanger(float* audioL, float* audioR)
 {
-    
+
 }
 
 void SpacifyAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
@@ -193,13 +245,15 @@ void SpacifyAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
 
     float* channelData[2] = { buffer.getWritePointer(0), (totalNumInputChannels < 2) ? buffer.getWritePointer(0) : buffer.getWritePointer(1) };
 
+    float uTankPrev = 0, lTankPrev = 0;
+
     for (int sample = 0; sample < buffer.getNumSamples(); sample++)
     {
         if (getFarOutButton()) 
         {
             float clean[2] = { *channelData[0], *channelData[1] };
             
-            reverb(channelData[0], channelData[1]);
+            reverb(channelData[0], channelData[1], 300, 0.3f, 0.5f, 0.7f, &uTankPrev, &lTankPrev);
             chorus(channelData[0], channelData[1]);
 
             float mix = getFarOutMix();
@@ -209,29 +263,12 @@ void SpacifyAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
 
         if (getLiftOffButton()) 
         {
-            float clean[2] = { *channelData[0], *channelData[1] };
 
-            distortion(channelData[0], channelData[1]);
-            reverb(channelData[0], channelData[1]);
-            chorus(channelData[0], channelData[1]);
-
-            float mix = getFarOutMix();
-            *channelData[0] = (1 - mix) * clean[0] + mix * *channelData[0];
-            *channelData[1] = (1 - mix) * clean[1] + mix * *channelData[1];
         }
 
         if (getOtherWorldlyButton())
         {
-            float clean[2] = { *channelData[0], *channelData[1] };
-
-            distortion(channelData[0], channelData[1]);
-            reverb(channelData[0], channelData[1]);
-            chorus(channelData[0], channelData[1]);
-            flanger(channelData[0], channelData[1]);
-
-            float mix = getFarOutMix();
-            *channelData[0] = (1 - mix) * clean[0] + mix * *channelData[0];
-            *channelData[1] = (1 - mix) * clean[1] + mix * *channelData[1];
+            
         }
 
         channelData[0]++;

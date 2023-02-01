@@ -20,8 +20,7 @@ class SpacifyAudioProcessor  : public juce::AudioProcessor
 {
 public:
 
-    double farOutMixLevel, liftOffMixLevel, otherWorldlyMixLevel;
-    bool farOutButtonClicked, liftOffButtonClicked, otherWorldlyButtonClicked;
+    double sampleRate;
 
     //==============================================================================
     SpacifyAudioProcessor();
@@ -70,7 +69,7 @@ public:
     float getOtherWorldlyMix();
 
     //==============================================================================
-    void reverb(float* audioL, float* audioR);
+    void reverb(float* audioL, float* audioR, int hcFreq, float diff, float decay, float hfDamp, float* uTankPrev, float* lTankPrev);
     void chorus(float* audioL, float* audioR);
     void distortion(float* audioL, float* audioR);
     void flanger(float* audioL, float* audioR);
