@@ -35,9 +35,18 @@ private:
     juce::Slider farOutMix;
     juce::Slider liftOffMix;
     juce::Slider otherWorldlyMix;
+
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> farOutMixAttatchment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> liftOffMixAttatchment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> otherWorldlyMixAttatchment;
+
     juce::TextButton farOutButton {"Far Out"};
     juce::TextButton liftOffButton { "Lift Off"};
     juce::TextButton otherWorldlyButton { "Other Wordly" };
+
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> farOutButtonAttatchment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> liftOffButtonAttatchment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> otherWorldlyButtonAttatchment;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SpacifyAudioProcessorEditor)
 };

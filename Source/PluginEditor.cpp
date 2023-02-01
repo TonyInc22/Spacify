@@ -26,6 +26,7 @@ SpacifyAudioProcessorEditor::SpacifyAudioProcessorEditor (SpacifyAudioProcessor&
     farOutMix.setValue(100);
     farOutMix.addListener(this);
     addAndMakeVisible(&farOutMix);
+    farOutMixAttatchment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "FAROUTMIX", farOutMix);
 
     liftOffMix.setSliderStyle(juce::Slider::SliderStyle::LinearHorizontal);
     liftOffMix.setRange(0, 100, 1);
@@ -35,6 +36,7 @@ SpacifyAudioProcessorEditor::SpacifyAudioProcessorEditor (SpacifyAudioProcessor&
     liftOffMix.setValue(100);
     liftOffMix.addListener(this);
     addAndMakeVisible(&liftOffMix);
+    liftOffMixAttatchment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "LIFTOFFMIX", liftOffMix);
 
     otherWorldlyMix.setSliderStyle(juce::Slider::SliderStyle::LinearHorizontal);
     otherWorldlyMix.setRange(0, 100, 1);
@@ -44,33 +46,25 @@ SpacifyAudioProcessorEditor::SpacifyAudioProcessorEditor (SpacifyAudioProcessor&
     otherWorldlyMix.setValue(100);
     otherWorldlyMix.addListener(this);
     addAndMakeVisible(&otherWorldlyMix);
+    otherWorldlyMixAttatchment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "OTHERWORLDLYMIX", otherWorldlyMix);
     //==============================================================================
 
     // Properties of the buttons
     //==============================================================================
     farOutButton.setButtonText("Far Out");
     farOutButton.setClickingTogglesState(true);
-    farOutButton.onClick = [&]() 
-    {
-        audioProcessor.farOutButtonClicked = !audioProcessor.farOutButtonClicked;
-    };
     addAndMakeVisible(&farOutButton);
+    farOutButtonAttatchment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "FAROUTBUTTON", farOutButton);
 
     liftOffButton.setButtonText("Lift Off");
     liftOffButton.setClickingTogglesState(true);
-    liftOffButton.onClick = [&]()
-    {
-        audioProcessor.liftOffButtonClicked = !audioProcessor.liftOffButtonClicked;
-    };
     addAndMakeVisible(&liftOffButton);
+    liftOffButtonAttatchment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "LIFTOFFBUTTON", liftOffButton);
 
     otherWorldlyButton.setButtonText("Other Worldly");
     otherWorldlyButton.setClickingTogglesState(true);
-    otherWorldlyButton.onClick = [&]()
-    {
-        audioProcessor.otherWorldlyButtonClicked = !audioProcessor.otherWorldlyButtonClicked;
-    };
     addAndMakeVisible(&otherWorldlyButton);
+    otherWorldlyButtonAttatchment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "OTHERWORLDLYBUTTON", otherWorldlyButton);
     //==============================================================================
 
 }
