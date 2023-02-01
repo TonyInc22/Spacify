@@ -186,17 +186,32 @@ void SpacifyAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
         {
             if (getFarOutButton()) 
             {
+                float clean = *channelData;
                 
+
+
+                float mix = getFarOutMix();
+                *channelData = (1 - mix) * clean + mix * *channelData;
             }
 
             if (getLiftOffButton()) 
             {
+                float clean = *channelData;
 
+
+
+                float mix = getLiftOffMix();
+                *channelData = (1 - mix) * clean + mix * *channelData;
             }
 
             if (getOtherWorldlyButton())
             {
-                
+                float clean = *channelData;
+
+
+
+                float mix = getOtherWorldlyMix();
+                *channelData = (1 - mix) * clean + mix * *channelData;
             }
 
             channelData++;
