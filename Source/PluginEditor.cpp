@@ -19,32 +19,23 @@ SpacifyAudioProcessorEditor::SpacifyAudioProcessorEditor (SpacifyAudioProcessor&
     // Properties of the sliders
     //==============================================================================
     farOutMix.setSliderStyle(juce::Slider::SliderStyle::LinearHorizontal);
-    farOutMix.setRange(0, 100, 1);
     farOutMix.setTextBoxStyle(juce::Slider::TextBoxAbove, true, 75, 25);
     farOutMix.setColour(juce::Slider::textBoxTextColourId, juce::Colours::black);
     farOutMix.setTextValueSuffix("% Mix");
-    farOutMix.setValue(100);
-    farOutMix.addListener(this);
     addAndMakeVisible(&farOutMix);
     farOutMixAttatchment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "FAROUTMIX", farOutMix);
 
     liftOffMix.setSliderStyle(juce::Slider::SliderStyle::LinearHorizontal);
-    liftOffMix.setRange(0, 100, 1);
     liftOffMix.setTextBoxStyle(juce::Slider::TextBoxAbove, true, 75, 25);
     liftOffMix.setColour(juce::Slider::textBoxTextColourId, juce::Colours::black);
     liftOffMix.setTextValueSuffix("% Mix");
-    liftOffMix.setValue(100);
-    liftOffMix.addListener(this);
     addAndMakeVisible(&liftOffMix);
     liftOffMixAttatchment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "LIFTOFFMIX", liftOffMix);
 
     otherWorldlyMix.setSliderStyle(juce::Slider::SliderStyle::LinearHorizontal);
-    otherWorldlyMix.setRange(0, 100, 1);
     otherWorldlyMix.setTextBoxStyle(juce::Slider::TextBoxAbove, true, 75, 25);
     otherWorldlyMix.setColour(juce::Slider::textBoxTextColourId, juce::Colours::black);
     otherWorldlyMix.setTextValueSuffix("% Mix");
-    otherWorldlyMix.setValue(100);
-    otherWorldlyMix.addListener(this);
     addAndMakeVisible(&otherWorldlyMix);
     otherWorldlyMixAttatchment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "OTHERWORLDLYMIX", otherWorldlyMix);
     //==============================================================================
@@ -106,12 +97,5 @@ void SpacifyAudioProcessorEditor::resized()
 
     otherWorldlyButton.setBounds(500, 30, 150, 150);
     //==============================================================================
-}
-
-void SpacifyAudioProcessorEditor::sliderValueChanged (juce::Slider* slider)
-{
-    if (slider == &farOutMix) audioProcessor.farOutMixLevel = farOutMix.getValue();
-    else if (slider == &liftOffMix) audioProcessor.liftOffMixLevel = liftOffMix.getValue();
-    else if (slider == &otherWorldlyMix) audioProcessor.otherWorldlyMixLevel = otherWorldlyMix.getValue();
 }
 

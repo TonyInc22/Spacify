@@ -129,6 +129,32 @@ bool SpacifyAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) 
 }
 #endif
 
+bool SpacifyAudioProcessor::getFarOutButton() 
+{
+    return apvts.getRawParameterValue("FAROUTBUTTON")->load();
+}
+bool SpacifyAudioProcessor::getLiftOffButton()
+{
+    return apvts.getRawParameterValue("LIFTOFFBUTTON")->load();
+}
+bool SpacifyAudioProcessor::getOtherWorldlyButton()
+{
+    return apvts.getRawParameterValue("OTHERWORLDLYBUTTON")->load();
+}
+
+float SpacifyAudioProcessor::getFarOutMix()
+{
+    return apvts.getRawParameterValue("FAROUTMIX")->load();
+}
+float SpacifyAudioProcessor::getLiftOffMix()
+{
+    return apvts.getRawParameterValue("LIFTOFFMIX")->load();
+}
+float SpacifyAudioProcessor::getOtherWorldlyMix()
+{
+    return apvts.getRawParameterValue("OTHERWORLDLYMIX")->load();
+}
+
 void SpacifyAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
@@ -153,16 +179,24 @@ void SpacifyAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
     // interleaved by keeping the same state.
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
+
         auto* channelData = buffer.getWritePointer (channel);
 
         for (int sample = 0; sample < buffer.getNumSamples(); sample++)
         {
-            if (liftOffButtonClicked) {
-                float cleanSample = *channelData;
+            if (getFarOutButton()) 
+            {
+                
+            }
 
-                *channelData *= 1 * 10;
+            if (getLiftOffButton()) 
+            {
 
-                *channelData = (((((2.0f / juce::MathConstants<float>::pi) * atan(*channelData)) * .5f) + (cleanSample * (1.0f - .5f))) / 2.f) * .5f;
+            }
+
+            if (getOtherWorldlyButton())
+            {
+                
             }
 
             channelData++;
@@ -209,7 +243,6 @@ juce::AudioProcessorValueTreeState::ParameterLayout SpacifyAudioProcessor::creat
     params.push_back(std::make_unique<juce::AudioParameterBool>("FAROUTBUTTON", "Far Out Button", false));
     params.push_back(std::make_unique<juce::AudioParameterBool>("LIFTOFFBUTTON", "Lift Off Button", false));
     params.push_back(std::make_unique<juce::AudioParameterBool>("OTHERWORLDLYBUTTON", "Other Worldly Button", false));
-
     params.push_back(std::make_unique<juce::AudioParameterFloat>("FAROUTMIX", "Far Out Mix", 0.0f,  100.0f, 100.0f));
     params.push_back(std::make_unique<juce::AudioParameterFloat>("LIFTOFFMIX", "Lift Off Mix", 0.0f, 100.0f, 100.0f));
     params.push_back(std::make_unique<juce::AudioParameterFloat>("OTHERWORLDLYMIX", "Other Worldly Mix", 0.0f, 100.0f, 100.0f));
