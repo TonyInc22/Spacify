@@ -70,10 +70,10 @@ public:
     float getOtherWorldlyMix();
 
     //==============================================================================
-    float reverb(float audio);
-    float chorus(float audio);
-    float distortion(float audio);
-    float flanger(float audio);
+    void reverb(float* audioL, float* audioR);
+    void chorus(float* audioL, float* audioR);
+    void distortion(float* audioL, float* audioR);
+    void flanger(float* audioL, float* audioR);
 
     juce::AudioProcessorValueTreeState apvts;
 

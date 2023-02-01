@@ -155,24 +155,24 @@ float SpacifyAudioProcessor::getOtherWorldlyMix()
     return apvts.getRawParameterValue("OTHERWORLDLYMIX")->load();
 }
 
-float SpacifyAudioProcessor::reverb(float audio)
+void SpacifyAudioProcessor::reverb(float* audioL, float* audioR)
 {
-    return audio;
+    
 }
 
-float SpacifyAudioProcessor::chorus(float audio)
+void SpacifyAudioProcessor::chorus(float* audioL, float* audioR)
 {
-    return audio;
+    
 }
 
-float SpacifyAudioProcessor::distortion(float audio)
+void SpacifyAudioProcessor::distortion(float* audioL, float* audioR)
 {
-    return audio;
+    
 }
 
-float SpacifyAudioProcessor::flanger(float audio)
+void SpacifyAudioProcessor::flanger(float* audioL, float* audioR)
 {
-    return audio;
+    
 }
 
 void SpacifyAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
@@ -191,57 +191,51 @@ void SpacifyAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    // Make sure to reset the state if your inner loop is processing
-    // the samples and the outer loop is handling the channels.
-    // Alternatively, you can process the samples with the channels
-    // interleaved by keeping the same state.
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
+    float* channelData[2] = { buffer.getWritePointer(0), (totalNumInputChannels < 2) ? buffer.getWritePointer(0) : buffer.getWritePointer(1) };
+
+    for (int sample = 0; sample < buffer.getNumSamples(); sample++)
     {
-
-        auto* channelData = buffer.getWritePointer (channel);
-
-        for (int sample = 0; sample < buffer.getNumSamples(); sample++)
+        if (getFarOutButton()) 
         {
-            if (getFarOutButton()) 
-            {
-                float clean = *channelData;
-                
-                *channelData = reverb(*channelData);
-                *channelData = chorus(*channelData);
+            float clean[2] = { *channelData[0], *channelData[1] };
+            
+            reverb(channelData[0], channelData[1]);
+            chorus(channelData[0], channelData[1]);
 
-                float mix = getFarOutMix();
-                *channelData = (1 - mix) * clean + mix * *channelData;
-            }
-
-            if (getLiftOffButton()) 
-            {
-                float clean = *channelData;
-
-                *channelData = distortion(*channelData);
-                *channelData = reverb(*channelData);
-                *channelData = chorus(*channelData);
-
-                float mix = getLiftOffMix();
-                *channelData = (1 - mix) * clean + mix * *channelData;
-            }
-
-            if (getOtherWorldlyButton())
-            {
-                float clean = *channelData;
-
-                *channelData = distortion(*channelData);
-                *channelData = reverb(*channelData);
-                *channelData = chorus(*channelData);
-                *channelData = flanger(*channelData);
-
-                float mix = getOtherWorldlyMix();
-                *channelData = (1 - mix) * clean + mix * *channelData;
-            }
-
-            channelData++;
+            float mix = getFarOutMix();
+            *channelData[0] = (1 - mix) * clean[0] + mix * *channelData[0];
+            *channelData[1] = (1 - mix) * clean[1] + mix * *channelData[1];
         }
+
+        if (getLiftOffButton()) 
+        {
+            float clean[2] = { *channelData[0], *channelData[1] };
+
+            distortion(channelData[0], channelData[1]);
+            reverb(channelData[0], channelData[1]);
+            chorus(channelData[0], channelData[1]);
+
+            float mix = getFarOutMix();
+            *channelData[0] = (1 - mix) * clean[0] + mix * *channelData[0];
+            *channelData[1] = (1 - mix) * clean[1] + mix * *channelData[1];
+        }
+
+        if (getOtherWorldlyButton())
+        {
+            float clean[2] = { *channelData[0], *channelData[1] };
+
+            distortion(channelData[0], channelData[1]);
+            reverb(channelData[0], channelData[1]);
+            chorus(channelData[0], channelData[1]);
+            flanger(channelData[0], channelData[1]);
+
+            float mix = getFarOutMix();
+            *channelData[0] = (1 - mix) * clean[0] + mix * *channelData[0];
+            *channelData[1] = (1 - mix) * clean[1] + mix * *channelData[1];
+        }
+
+        channelData[0]++;
+        channelData[1]++;
     }
 }
 
